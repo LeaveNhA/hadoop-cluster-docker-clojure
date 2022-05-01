@@ -3,6 +3,7 @@
 echo ""
 
 echo -e "\nbuild docker hadoop image\n"
-docker build -t kiwenlau/hadoop:1.0 .
+# derived from kiwenlau/hadoop:1.0
+docker build -t leavenha/hadoop:1.1 .
 
 echo ""

@@ -41,21 +41,9 @@ RUN mv /tmp/ssh_config ~/.ssh/config && \
     mv /tmp/yarn-site.xml $HADOOP_HOME/etc/hadoop/yarn-site.xml && \
     mv /tmp/slaves $HADOOP_HOME/etc/hadoop/slaves && \
     mv /tmp/start-hadoop.sh ~/start-hadoop.sh && \
+    mv /tmp/fit-environment.sh ~/fit-environment.sh && \
     mv /tmp/run-wordcount.sh ~/run-wordcount.sh && \
     mv /tmp/*-standalone.jar ~/wordcount.jar
-
-CMD cat /root/.bashrc
-
-CMD touch ~/.bashrc && \
-    echo "export HDFS_NAMENODE_USER=root" >> /root/.bashrc && \
-    echo "export HDFS_DATANODE_USER=root" >> /root/.bashrc && \
-    echo "export HDFS_SECONDARYNAMENODE_USER=root" >> /root/.bashrc && \
-    echo "export YARN_RESOURCEMANAGER_USER=root" >> /root/.bashrc && \
-    echo "export YARN_NODEMANAGER_USER=root" >> /root/.bashrc && \
-    echo "export JAVA_HOME=/usr/local/openjdk-11" >> /root/.bashrc && \
-    echo "export HADOOP_HOME=/usr/local/hadoop" >> /root/.bashrc && \
-
-CMD cat /root/.bashrc
 
 CMD cat $HADOOP_HOME/bin/start-dfs.sh
 
@@ -63,6 +51,7 @@ CMD cat $HADOOP_HOME/bin/start-yarn.sh
 
 CMD chmod +x ~/start-hadoop.sh && \
     chmod +x ~/run-wordcount.sh && \
+    chmod +x ~/fit-environment.sh && \
     chmod +x $HADOOP_HOME/sbin/start-dfs.sh && \
     chmod +x $HADOOP_HOME/sbin/start-yarn.sh
 
