@@ -1,0 +1,3 @@
+[submodule "wcclj"]
+	path = wcclj
+	url = https://github.com/LeaveNhA/WCClojure.git
