@@ -14,7 +14,7 @@ hadoop fs -mkdir -p input
 hdfs dfs -put ./input/* input
 
 # run wordcount
-java -cp wordcount.jar clojure_hadoop.job -job wcclj.core/job -input input -output output > /dev/null
+java -cp wordcount.jar clojure_hadoop.job -job wcclj.core/job -input input -output output
 
 # print the input files
 echo -e "\ninput file1.txt:"
