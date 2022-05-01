@@ -17,6 +17,11 @@ ENV JAVA_HOME=/usr/local/openjdk-11
 ENV HADOOP_HOME=/usr/local/hadoop
 ENV PATH=$PATH:/usr/local/hadoop/bin:/usr/local/hadoop/sbin
 
+CMD export JAVA_HOME=/usr/local/openjdk-11 && \
+    export HADOOP_HOME=/usr/local/hadoop && \
+    export PATH=$PATH:/usr/local/hadoop/bin:/usr/local/hadoop/sbin
+
+
 # ssh without key
 RUN ssh-keygen -t rsa -f ~/.ssh/id_rsa -P '' && \
     cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
@@ -26,7 +31,7 @@ RUN mkdir -p ~/hdfs/namenode && \
     mkdir $HADOOP_HOME/logs
 
 COPY config/* /tmp/
-COPY wcclj/target/*.jar /tmp/
+COPY wcclj/target/*-standalone.jar /tmp/
 
 RUN mv /tmp/ssh_config ~/.ssh/config && \
     mv /tmp/hadoop-env.sh /usr/local/hadoop/etc/hadoop/hadoop-env.sh && \
@@ -36,22 +41,32 @@ RUN mv /tmp/ssh_config ~/.ssh/config && \
     mv /tmp/yarn-site.xml $HADOOP_HOME/etc/hadoop/yarn-site.xml && \
     mv /tmp/slaves $HADOOP_HOME/etc/hadoop/slaves && \
     mv /tmp/start-hadoop.sh ~/start-hadoop.sh && \
-    mv /tmp/run-wordcount.sh ~/run-wordcount.sh \
-    mv /tmp/* ~/*-standalone.jar
+    mv /tmp/run-wordcount.sh ~/run-wordcount.sh && \
+    mv /tmp/*-standalone.jar ~/wordcount.jar
 
-RUN chmod +x ~/start-hadoop.sh && \
+CMD cat /root/.bashrc
+
+CMD touch ~/.bashrc && \
+    echo "export HDFS_NAMENODE_USER=root" >> /root/.bashrc && \
+    echo "export HDFS_DATANODE_USER=root" >> /root/.bashrc && \
+    echo "export HDFS_SECONDARYNAMENODE_USER=root" >> /root/.bashrc && \
+    echo "export YARN_RESOURCEMANAGER_USER=root" >> /root/.bashrc && \
+    echo "export YARN_NODEMANAGER_USER=root" >> /root/.bashrc && \
+    echo "export JAVA_HOME=/usr/local/openjdk-11" >> /root/.bashrc && \
+    echo "export HADOOP_HOME=/usr/local/hadoop" >> /root/.bashrc && \
+
+CMD cat /root/.bashrc
+
+CMD cat $HADOOP_HOME/bin/start-dfs.sh
+
+CMD cat $HADOOP_HOME/bin/start-yarn.sh
+
+CMD chmod +x ~/start-hadoop.sh && \
     chmod +x ~/run-wordcount.sh && \
     chmod +x $HADOOP_HOME/sbin/start-dfs.sh && \
-    chmod +x $HADOOP_HOME/sbin/start-yarn.sh && \
-    echo "export HDFS_NAMENODE_USER=root" >> ~/.bashrc && \
-    echo "export HDFS_DATANODE_USER=root" >> ~/.bashrc && \
-    echo "export HDFS_SECONDARYNAMENODE_USER=root" >> ~/.bashrc && \
-    echo "export YARN_RESOURCEMANAGER_USER=root" >> ~/.bashrc && \
-    echo "export YARN_NODEMANAGER_USER=root" >> ~/.bashrc && \
-    echo "export JAVA_HOME=/usr/local/openjdk-11" >> ~/.bashrc && \
-    echo "export HADOOP_HOME=/usr/local/hadoop" >> ~/.bashrc
+    chmod +x $HADOOP_HOME/sbin/start-yarn.sh
 
 # format namenode
-RUN /usr/local/hadoop/bin/hdfs namenode -format
+CMD $HADOOP_HOME/bin/hdfs namenode -format
 
 CMD [ "sh", "-c", "service ssh start; bash"]
