@@ -9,16 +9,16 @@
 
 ### 3 Nodes Hadoop Cluster
 
-##### 1. pull docker image
+##### 1. clone this github repository
 
 ```
-sudo docker pull kiwenlau/hadoop:1.0
+git clone https://github.com/LeaveNhA/hadoop-cluster-docker-clojure
 ```
 
-##### 2. clone github repository
+##### 2. fetch submodules of this repository
 
 ```
-git clone https://github.com/kiwenlau/hadoop-cluster-docker
+git submodule update --init
 ```
 
 ##### 3. create hadoop network
@@ -27,11 +27,16 @@ git clone https://github.com/kiwenlau/hadoop-cluster-docker
 sudo docker network create --driver=bridge hadoop
 ```
 
-##### 4. start container
+##### 4. build image
 
 ```
-cd hadoop-cluster-docker
-sudo ./start-container.sh
+./build-image.sh
+```
+
+##### 5. start container
+
+```
+./start-container.sh
 ```
 
 **output:**
@@ -42,16 +47,17 @@ start hadoop-slave1 container...
 start hadoop-slave2 container...
 root@hadoop-master:~# 
 ```
+
 - start 3 containers with 1 master and 2 slaves
 - you will get into the /root directory of hadoop-master container
 
-##### 5. start hadoop
+##### 6. start hadoop
 
 ```
 ./start-hadoop.sh
 ```
 
-##### 6. run wordcount
+##### 7. run wordcount
 
 ```
 ./run-wordcount.sh
